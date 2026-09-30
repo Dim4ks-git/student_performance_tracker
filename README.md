@@ -7,30 +7,92 @@ The Student Performance Tracker is a JavaFX desktop application designed to help
 - JavaFX for the desktop graphical user interface
 - CI/CD pipeline for automated build, testing, and deployment workflows
 
-## Installation Specifications
+## Project Structure
+To view the project structure from the project root, run:
 
-### Prerequisites
-- Java JDK 17 or newer
-- Maven build tool
-- JavaFX SDK compatible with the installed JDK
-- An IDE such as IntelliJ IDEA or Eclipse
-- Git installed and configured on your machine
+```bash
+tree -L 10
+```
 
-### Clone the Repository
+Example structure:
+
+```text
+student_performance_tracker/
+├── LICENSE
+├── README.md
+├── pom.xml
+├── src/
+│   └── main/
+│       ├── java/
+│       │   └── ie/
+│       │       └── mtu/
+│       │           └── studenttracker/
+│       │               ├── App.java
+│       │               ├── PrimaryController.java
+│       │               └── SecondaryController.java
+│       └── resources/
+├── target/
+└── .git/
+```
+
+## Prerequisites
+- Java JDK 11 or newer
+- Maven installed and added to your system PATH
+- JavaFX dependencies configured in the Maven project
+- Git installed
+- IntelliJ IDEA, Eclipse, or another Java IDE recommended
+
+## Installation
+
+### 1. Clone the repository
 ```bash
 git clone https://bitbucket.org/<your-username>/student_performance_tracker.git
 cd student_performance_tracker
 ```
 
-### Configure JavaFX
-Ensure the JavaFX libraries are added to your Maven project configuration in the `pom.xml` file so the application can compile and run correctly.
-
-### Build the Project
+### 2. Build dependencies
 ```bash
 mvn clean install
 ```
 
-### Run the Application
+## Usage
+Run all commands from the project root directory.
+
+### Fedora Linux
+```bash
+cd /path/to/student_performance_tracker
+mvn test
+mvn clean verify
+mvn clean package
+```
+
+### macOS
+```bash
+cd /path/to/student_performance_tracker
+mvn test
+mvn clean verify
+mvn clean package
+```
+
+### Windows 11
+PowerShell:
+```powershell
+cd C:\path\to\student_performance_tracker
+.\mvnw.cmd test
+.\mvnw.cmd clean verify
+.\mvnw.cmd clean package
+.\mvnw.cmd clean javafx:run
+```
+
+Command Prompt:
+```cmd
+cd C:\path\to\student_performance_tracker
+mvn test
+mvn clean verify
+mvn clean package
+```
+
+## Run the Application
 ```bash
 mvn javafx:run
 ```
@@ -38,10 +100,10 @@ mvn javafx:run
 ## CI/CD
 This project is intended to be integrated with a Bitbucket-based CI/CD workflow to automate:
 - dependency installation
-- project builds
+- Maven builds
 - automated testing
-- code quality checks
-- deployment or packaging for release builds
+- verification checks
+- packaging and release workflow
 
 ## Features
 - Track academic performance indicators
