@@ -3,7 +3,7 @@ package com.agile.studentapp;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+public class StudentController {
     @FXML
     private Label welcomeText;
 
