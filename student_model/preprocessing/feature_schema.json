@@ -1,0 +1,10 @@
+{
+  "score_features": [
+    "previous_exam_score",
+    "attendance_percentage",
+    "study_hours_per_day",
+    "practice_tests_completed"
+  ],
+  "target": "exam_score",
+  "group_key": "student_id"
+}
