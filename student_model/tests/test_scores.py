@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 import pandas as pd
 
-from student_model.evaluation import compare, errors
+from student_model.modeling.evaluation import compare, errors
 
 
 class ScoresTests(unittest.TestCase):

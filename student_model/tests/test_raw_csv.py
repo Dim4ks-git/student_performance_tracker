@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from student_model.data import HEADER, read_raw
+from student_model.preprocessing.csv_input import HEADER, read_raw
 
 
 class ReadRawTests(unittest.TestCase):

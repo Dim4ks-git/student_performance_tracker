@@ -4,8 +4,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from student_model.data import HEADER
-from student_model.experiment import load_input
+from student_model.preprocessing.csv_input import HEADER
+from student_model.preprocessing.experiment import load_input
 
 
 class LoadInputTests(unittest.TestCase):

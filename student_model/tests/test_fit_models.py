@@ -4,12 +4,12 @@ from pathlib import Path
 
 import pandas as pd
 
-from student_model.estimators import fit_models
+from student_model.modeling.estimators import fit_models
 
 
 class FitModelsTests(unittest.TestCase):
     def test_fits_models_on_their_ordered_feature_sets(self):
-        schema_path = Path(__file__).resolve().parents[1] / "feature_schema.json"
+        schema_path = Path(__file__).resolve().parents[1] / "preprocessing" / "feature_schema.json"
         schema = json.loads(schema_path.read_text(encoding="utf-8"))
         rows = pd.DataFrame(
             {

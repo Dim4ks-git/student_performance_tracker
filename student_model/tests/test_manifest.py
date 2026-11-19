@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from student_model.artifacts import write_manifest
+from student_model.publishing.artifacts import write_manifest
 
 
 class ManifestTests(unittest.TestCase):

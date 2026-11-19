@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from pandas.testing import assert_series_equal
 
-from student_model.numeric import numeric_column
+from student_model.preprocessing.numeric import numeric_column
 
 
 class NumericColumnTests(unittest.TestCase):

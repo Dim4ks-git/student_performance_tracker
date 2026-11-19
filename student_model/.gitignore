@@ -1,2 +1,7 @@
 # Local training runs, validation receipts, and model bundles
 /runs/
+
+# Local Python environment and bytecode
+/.venv/
+__pycache__/
+*.pyc

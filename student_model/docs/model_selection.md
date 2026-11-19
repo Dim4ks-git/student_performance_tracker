@@ -2,7 +2,7 @@
 
 Make the prediction at the pre-exam check-in using observations available
 before the exam starts. The target is `exam_score` in marks out of 100.
-Use the following inputs in the order defined by [the feature schema](feature_schema.json).
+Use the following inputs in the order defined by [the feature schema](../preprocessing/feature_schema.json).
 
 1. `previous_exam_score`
 2. `attendance_percentage`
@@ -44,7 +44,7 @@ fresh run directory and use the checked-in CSV for validation and finalization.
 ```bash
 mkdir -p student_model/runs
 run_dir=$(mktemp -d student_model/runs/run.XXXXXXXX)
-csv=student_model/student_exam_performance_copy.csv
+csv=student_model/datasets/student_exam_performance_copy.csv
 python -m student_model.validate "$csv" > "$run_dir/validation.json" &&
   python -m student_model.finalize "$csv" "$run_dir/validation.json" "$run_dir/bundle"
 ```

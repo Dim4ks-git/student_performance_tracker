@@ -1,9 +1,9 @@
 import argparse
 import json
 
-from .estimators import fit_models
-from .evaluation import compare
-from .experiment import load_input
+from .modeling.estimators import fit_models
+from .modeling.evaluation import compare
+from .preprocessing.experiment import load_input
 
 
 def validation_report(run) -> dict:

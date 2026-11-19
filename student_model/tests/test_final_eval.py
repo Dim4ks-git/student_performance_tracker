@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, sentinel
 
-from student_model.final_eval import final_evaluation
+from student_model.modeling.final_eval import final_evaluation
 
 
 class FinalEvaluationTests(unittest.TestCase):
@@ -33,9 +33,9 @@ class FinalEvaluationTests(unittest.TestCase):
         ):
             with (
                 self.subTest(change=change),
-                patch("student_model.final_eval.fit_models") as fit,
-                patch("student_model.final_eval.compare") as compare,
-                patch("student_model.final_eval.slice_errors") as slice_errors,
+                patch("student_model.modeling.final_eval.fit_models") as fit,
+                patch("student_model.modeling.final_eval.compare") as compare,
+                patch("student_model.modeling.final_eval.slice_errors") as slice_errors,
             ):
                 with self.assertRaises(ValueError):
                     final_evaluation(self.run_data, {**self.receipt, **change})
@@ -49,12 +49,12 @@ class FinalEvaluationTests(unittest.TestCase):
             "ridge4": (self.receipt["score_features"], sentinel.ridge),
         }
         with (
-            patch("student_model.final_eval.fit_models", return_value=models) as fit,
+            patch("student_model.modeling.final_eval.fit_models", return_value=models) as fit,
             patch(
-                "student_model.final_eval.compare",
+                "student_model.modeling.final_eval.compare",
                 return_value=(sentinel.metrics, sentinel.predictions),
             ) as compare,
-            patch("student_model.final_eval.slice_errors", return_value=sentinel.slices) as slice_errors,
+            patch("student_model.modeling.final_eval.slice_errors", return_value=sentinel.slices) as slice_errors,
         ):
             result = final_evaluation(self.run_data, self.receipt)
 

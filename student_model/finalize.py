@@ -3,10 +3,10 @@ import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from .artifacts import save_model, write_manifest
-from .experiment import load_input
-from .final_eval import final_evaluation
-from .reporting import write_metrics
+from .modeling.final_eval import final_evaluation
+from .preprocessing.experiment import load_input
+from .publishing.artifacts import save_model, write_manifest
+from .publishing.reporting import write_metrics
 
 
 def publish(csv_path, receipt_path, output_dir) -> Path:

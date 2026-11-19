@@ -7,12 +7,12 @@ from unittest.mock import Mock, patch
 
 import joblib
 
-from student_model.artifacts import save_model
-from student_model.estimators import make_ridge
-from student_model.experiment import load_input
+from student_model.publishing.artifacts import save_model
+from student_model.modeling.estimators import make_ridge
+from student_model.preprocessing.experiment import load_input
 
 
-CSV_PATH = Path(__file__).resolve().parents[1] / "student_exam_performance_copy.csv"
+CSV_PATH = Path(__file__).resolve().parents[1] / "datasets" / "student_exam_performance_copy.csv"
 PINNED_DATASET_SHA256 = "3967020b770568f9a732387f04907807bf0c39cd1d8c96077e36646387cdf1bc"
 
 
@@ -74,7 +74,7 @@ class ReloadTests(unittest.TestCase):
         reloaded = Mock()
         reloaded.predict.return_value = [43.0]
         with tempfile.TemporaryDirectory() as directory:
-            with patch("student_model.artifacts.joblib.load", return_value=reloaded):
+            with patch("student_model.publishing.artifacts.joblib.load", return_value=reloaded):
                 with self.assertRaisesRegex(ValueError, "pre-save reference"):
                     save_model(directory, self._constant_pipeline(), self.schema, "a" * 64)
             self.assertFalse((Path(directory) / "reference.json").exists())

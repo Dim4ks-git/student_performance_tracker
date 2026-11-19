@@ -3,7 +3,7 @@ import unittest
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from student_model.data import eligible
+from student_model.preprocessing.csv_input import eligible
 
 
 class EligibleTests(unittest.TestCase):

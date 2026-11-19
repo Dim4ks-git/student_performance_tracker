@@ -3,7 +3,7 @@ import unittest
 
 import pandas as pd
 
-from student_model.evaluation import slice_errors
+from student_model.modeling.evaluation import slice_errors
 
 
 class SliceErrorsTests(unittest.TestCase):

@@ -5,17 +5,17 @@ import unittest
 
 import pandas as pd
 
-from student_model.evaluation import slice_errors
-from student_model.experiment import load_input
-from student_model.final_eval import final_evaluation
-from student_model.reporting import write_metrics
+from student_model.modeling.evaluation import slice_errors
+from student_model.preprocessing.experiment import load_input
+from student_model.modeling.final_eval import final_evaluation
+from student_model.publishing.reporting import write_metrics
 from student_model.validate import validation_report
 
 
 class MetricsFileTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        csv_path = Path(__file__).resolve().parents[1] / "student_exam_performance_copy.csv"
+        csv_path = Path(__file__).resolve().parents[1] / "datasets" / "student_exam_performance_copy.csv"
         cls.run_data = load_input(csv_path)
         cls.receipt = validation_report(cls.run_data)
         cls.pipeline, cls.test_metrics, cls.slices = final_evaluation(cls.run_data, cls.receipt)

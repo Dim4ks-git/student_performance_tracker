@@ -6,7 +6,7 @@ from sklearn.linear_model import Ridge
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from student_model.estimators import make_ridge
+from student_model.modeling.estimators import make_ridge
 
 
 class MakeRidgeTests(unittest.TestCase):

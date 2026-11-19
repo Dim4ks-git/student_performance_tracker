@@ -3,7 +3,7 @@ from itertools import combinations
 
 import pandas as pd
 
-from student_model.splits import split_rows
+from student_model.preprocessing.splits import split_rows
 
 
 class SplitRowsTests(unittest.TestCase):

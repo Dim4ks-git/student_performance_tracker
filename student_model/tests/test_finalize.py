@@ -8,11 +8,11 @@ from unittest.mock import patch
 import joblib
 
 from student_model import finalize
-from student_model.experiment import load_input
+from student_model.preprocessing.experiment import load_input
 from student_model.validate import validation_report
 
 
-CSV_PATH = Path(__file__).resolve().parents[1] / "student_exam_performance_copy.csv"
+CSV_PATH = Path(__file__).resolve().parents[1] / "datasets" / "student_exam_performance_copy.csv"
 DATASET_SHA256 = "aa3f57815e36a049e2545a7c4efd6c37e22e1fd71b0d6ab6164fb01d460ecc8a"
 
 

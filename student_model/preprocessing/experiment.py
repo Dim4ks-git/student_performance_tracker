@@ -3,7 +3,7 @@ import json
 from os import PathLike
 from pathlib import Path
 
-from .data import eligible, normalize, read_raw
+from .csv_input import eligible, normalize, read_raw
 from .splits import split_rows
 
 
