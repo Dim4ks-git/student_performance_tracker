@@ -35,3 +35,21 @@ inclusive threshold to unrounded metrics. For example, if the better baseline
 MAE is 11.0, a four-field MAE of 10.0 qualifies and 10.01 falls short. Use
 untouched test students for final testing after selection. Require evidence from
 later comparable exams with real students before making individual forecasts.
+
+## Local training results
+
+From the repository root, with the pinned Python environment active, create a
+fresh run directory and use the checked-in CSV for validation and finalization.
+
+```bash
+mkdir -p student_model/runs
+run_dir=$(mktemp -d student_model/runs/run.XXXXXXXX)
+csv=student_model/student_exam_performance_copy.csv
+python -m student_model.validate "$csv" > "$run_dir/validation.json" &&
+  python -m student_model.finalize "$csv" "$run_dir/validation.json" "$run_dir/bundle"
+```
+
+Git ignores `student_model/runs/`. For a release, publish the verified `bundle/`
+as one artifact so the fitted pipeline travels with its feature schema,
+manifest, reference prediction, and metrics. Keep the rest of the run directory
+local.
