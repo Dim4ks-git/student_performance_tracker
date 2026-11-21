@@ -3,20 +3,22 @@ package com.agile.studentapp;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
+import javafx.scene.control.*;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
 
 public class StudentApplication extends Application {
     @Override
@@ -25,14 +27,11 @@ public class StudentApplication extends Application {
 
         // Creating GridPane
         GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(25, 25, 25, 25));
+        initGrid(grid);
 
         // Creating/Setting Scene
-        Scene scene = new Scene(grid, 960, 720);
-        primaryStage.setScene(scene);
+        Scene formScene = new Scene(grid, 960, 720);
+        primaryStage.setScene(formScene);
 
 
         Text sceneTitle = new Text("Student Form");
@@ -182,6 +181,85 @@ public class StudentApplication extends Application {
         final ComboBox q13box = new ComboBox(q13options);
         grid.add(q13box, 1, 13);
 
+        // Grid 2: Results screen
+
+        GridPane grid2 = new GridPane();
+        initGrid(grid2);
+
+        Scene resultScene = new Scene(grid2, 960, 720);
+
+        Text scene2Title = new Text("Results");
+        scene2Title.setFont(Font.font("Tahoma", FontWeight.BOLD, 20));
+        grid2.add(scene2Title, 0, 0, 2, 1);
+
+        Text subtitle = new Text("AI Analysis of inputted data");
+        subtitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 18));
+        grid2.add(subtitle, 0, 2, 2, 1);
+
+        Text ai_text = new Text("dummy text until implemented");
+        ai_text.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
+        grid2.add(ai_text, 0, 3, 2, 1);
+
+        Button saveButton = new Button("Save to File");
+        saveButton.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
+        saveButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                PrintWriter fw = null;
+                Date d = new Date();
+                String dateString = d.toString().replaceAll(" ", "_");
+                dateString = dateString.replaceAll(":", "_");
+                try {
+                    fw = new PrintWriter(dateString+".txt");
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    setAnswers(bw, "Age", q1box.getValue().toString());
+                    setAnswers(bw, "Gender", q2box.getValue().toString());
+                    setAnswers(bw, "Family Income", q3box.getValue().toString());
+                    setAnswers(bw, "Parent Education Level", q4box.getValue().toString());
+                    setAnswers(bw, "Parent Degree", q5box.getValue().toString());
+                    setAnswers(bw, "Hours Studied/Day", q6box.getValue().toString());
+                    setAnswers(bw, "Last Exam Score", q7box.getValue().toString());
+                    setAnswers(bw, "Note Quality", q8box.getValue().toString());
+                    setAnswers(bw, "Hours Slept/Day", q9box.getValue().toString());
+                    setAnswers(bw, "Studying for Exams", q10box.getValue().toString());
+                    setAnswers(bw, "Break Frequency", q11box.getValue().toString());
+                    setAnswers(bw, "Internet Access", q12box.getValue().toString());
+                    setAnswers(bw, "Private Tutor", q13box.getValue().toString());
+                    bw.write("AI Ruling: " + ai_text.getText());
+                    bw.close();
+                    fw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    fw.close();
+                }
+                primaryStage.close();
+            }
+        });
+        grid2.add(saveButton, 0, 15, 2, 1);
+
+        Button submitButton = new Button("Submit");
+        submitButton.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
+        submitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                primaryStage.setScene(resultScene);
+            }
+        });
+        grid.add(submitButton, 0, 15, 2, 1);
+
         primaryStage.show();
     }
+
+    private void initGrid(GridPane grid) {
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+    }
+
+    private void setAnswers(BufferedWriter bw, String description, String answer) throws IOException {
+        bw.write(description + ": " + answer);
+        bw.newLine();
+    }
+
 }

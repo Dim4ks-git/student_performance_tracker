@@ -1,0 +1,14 @@
+Age: 18
+Gender: Male
+Family Income: Private
+Parent Education Level: Low
+Parent Degree: Masters
+Hours Studied/Day: 7
+Last Exam Score: 69
+Note Quality: Occasional notes
+Hours Slept/Day: 3
+Studying for Exams: Always revising
+Break Frequency: Frequently
+Internet Access: Yes
+Private Tutor: Yes
+AI Ruling: dummy text until implemented
