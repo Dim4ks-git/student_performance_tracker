@@ -1,4 +1,4 @@
-"""Validation for raw desktop study check-ins."""
+"""Request and response schemas for desktop study check-ins."""
 
 from typing import Annotated, Literal
 
@@ -18,3 +18,20 @@ class CheckIn(BaseModel):
     revision_frequency: Literal["Rarely", "Weekly", "Daily"] | None = None
     assignment_completion_rate: Percentage | None = None
     goal: Literal["remember_material", "finish_coursework"] | None = None
+
+
+class Recommendation(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    reason: str
+    action: str
+    follow_up: str
+
+
+class StudyResult(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    estimated_exam_score: Percentage | None
+    model_version: str | None
+    recommendation: Recommendation
+    optional_question: str | None
