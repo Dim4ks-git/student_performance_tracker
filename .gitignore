@@ -1,4 +1,27 @@
-# Compiled class file
+# Python environments and bytecode
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Python test, coverage, and analysis output
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Local environment configuration
+.env
+.env.*
+!.env.example
+
+# Python packaging and Java build output
+build/
+dist/
+*.egg-info/
+target/
 *.class
 
 # Log file
@@ -22,3 +45,11 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Local JetBrains project settings
+.idea/
+*.iml
+
+# OS metadata
+.DS_Store
+Thumbs.db
