@@ -1,16 +1,2 @@
 # Local training runs, validation receipts, and model bundles
 /runs/
-
-# Local Python environments and bytecode
-.venv/
-venv/
-__pycache__/
-*.py[cod]
-
-# Test and analysis caches and reports
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.coverage
-.coverage.*
-htmlcov/

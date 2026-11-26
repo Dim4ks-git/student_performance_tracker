@@ -30,7 +30,7 @@ class ValidationReportTests(unittest.TestCase):
                 metrics = {
                     "median": {"mae": median_mae, "rmse": 13},
                     "previous": {"mae": previous_mae, "rmse": 13},
-                    "ridge4": {"mae": ridge_mae, "rmse": 11},
+                    "score_model": {"mae": ridge_mae, "rmse": 11},
                 }
                 with (
                     patch("student_model.validate.fit_models", return_value=sentinel.models) as fit,

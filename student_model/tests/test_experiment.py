@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from student_model.preprocessing.csv_input import HEADER
+from student_model.preprocessing.csv_input import DIFFICULTY_FLAG, HEADER
 from student_model.preprocessing.experiment import load_input
 
 
@@ -45,6 +45,8 @@ class LoadInputTests(unittest.TestCase):
                     "attendance_percentage",
                     "study_hours_per_day",
                     "practice_tests_completed",
+                    "exam_preparation_days",
+                    "exam_difficulty",
                 ],
                 "target": "exam_score",
                 "group_key": "student_id",
@@ -63,3 +65,21 @@ class LoadInputTests(unittest.TestCase):
         self.assertEqual(after["dataset_sha256"], hashlib.sha256(self.path.read_bytes()).hexdigest())
         self.assertNotEqual(before["dataset_sha256"], after["dataset_sha256"])
         self.assert_partitions(after)
+
+    def test_external_csv_uses_only_ratings_confirmed_before_the_exam(self):
+        for with_flag in (False, True):
+            with self.path.open("w", encoding="utf-8", newline="") as stream:
+                writer = csv.writer(stream)
+                writer.writerow([*HEADER, DIFFICULTY_FLAG] if with_flag else HEADER)
+                for student in range(20):
+                    row = self.make_row(f"s{student:02d}", 50)
+                    row[HEADER.index("exam_difficulty")] = "Hard"
+                    if with_flag:
+                        row.append("true" if student % 2 else "false")
+                    writer.writerow(row)
+            run = load_input(self.path)
+            for partition in ("dev", "test"):
+                rows = run[partition]
+                confirmed = rows.student_id.str[1:].astype(int).mod(2).eq(1) & with_flag
+                self.assertTrue(rows.loc[confirmed, "exam_difficulty"].eq("Hard").all())
+                self.assertTrue(rows.loc[~confirmed, "exam_difficulty"].isna().all())

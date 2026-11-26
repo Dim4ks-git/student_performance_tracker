@@ -79,7 +79,8 @@ class RecommendationTests(unittest.TestCase):
                     recommendation(CheckIn(**fields)),
                     {
                         "reason": reason,
-                        "action": "Pick one assignment and schedule its next small step.",
+                        "action": ("Pick one assignment and schedule its next small step." if rate is None
+                                   else "Open the unfinished assignment due soonest and schedule its first incomplete step."),
                         "follow_up": "Did you complete that step?",
                     },
                 )
@@ -92,3 +93,9 @@ class RecommendationTests(unittest.TestCase):
             recommendation(answers)["reason"],
             "A short practice session can give you a starting point.",
         )
+
+    def test_recalls_with_the_reported_method_and_can_continue_with_only_an_outcome(self):
+        first = CheckIn(goal="remember_material", study_method="Flashcards")
+        self.assertIn("cards", recommendation(first)["action"])
+        later = CheckIn(goal="remember_material", last_check_in={"outcome": "not_tried"})
+        self.assertIn("recall just one idea", recommendation(later)["action"])

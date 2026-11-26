@@ -52,7 +52,7 @@ class StudyCheckInRouteTests(unittest.IsolatedAsyncioTestCase):
         )
         self.predictor.predict.assert_called_once()
 
-    async def test_empty_check_in_returns_general_action_and_previous_mark_question(self):
+    async def test_empty_check_in_invites_student_to_choose_goal(self):
         response = await self.client.post("/v1/study-check-ins", json={})
 
         self.assertEqual(response.status_code, 200)
@@ -66,10 +66,56 @@ class StudyCheckInRouteTests(unittest.IsolatedAsyncioTestCase):
                     "action": "Pick one topic and try recalling it before checking your notes.",
                     "follow_up": "Which part would you like help with next?",
                 },
-                "optional_question": "What was your last comparable exam mark out of 100?",
+                "optional_question": "Would you like help remembering material or finishing coursework?",
             },
         )
         self.predictor.predict.assert_not_called()
+
+    async def test_return_visits_use_the_students_goal_and_outcome(self):
+        actions = set()
+        for goal in ("finish_coursework", "remember_material"):
+            first = await self.client.post("/v1/study-check-ins", json={"goal": goal})
+            first_action = first.json()["recommendation"]["action"]
+            for outcome in ("helped", "did_not_help", "not_tried"):
+                prior = {"goal": goal, "outcome": outcome}
+                visit = await self.client.post("/v1/study-check-ins", json={"last_check_in": prior})
+                self.assertEqual(visit.status_code, 200)
+                result = visit.json()
+                self.assertIsNone(result["estimated_exam_score"])
+                self.assertIsNone(result["optional_question"])
+                self.assertNotEqual(result["recommendation"]["action"], first_action)
+                actions.add(result["recommendation"]["action"])
+            changed = await self.client.post("/v1/study-check-ins", json={
+                "goal": goal, "last_check_in": {
+                    "goal": "finish_coursework" if goal == "remember_material" else "remember_material",
+                    "outcome": "helped",
+                },
+            })
+            self.assertEqual(changed.json(), first.json())
+        self.assertEqual(len(actions), 6)
+
+    async def test_unrecognized_outcome_is_rejected(self):
+        response = await self.client.post("/v1/study-check-ins", json={
+            "last_check_in": {"outcome": "something else"},
+        })
+        self.assertEqual(response.status_code, 422)
+
+    async def test_401_digit_practice_test_count_returns_advice_without_score(self):
+        response = await self.client.post(
+            "/v1/study-check-ins",
+            json={
+                "previous_exam_score": 73.4,
+                "study_hours_per_day": 3.42,
+                "practice_tests_completed": 10**400,
+                "revision_frequency": "Rarely",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        self.assertIsNone(result["estimated_exam_score"])
+        self.assertIsNone(result["model_version"])
+        self.assertIn("several completed tests", result["recommendation"]["reason"])
 
     async def test_negative_practice_test_count_returns_validation_error(self):
         response = await self.client.post(
@@ -80,4 +126,18 @@ class StudyCheckInRouteTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(
             response.json()["detail"][0]["loc"], ["body", "practice_tests_completed"]
         )
+        self.predictor.predict.assert_not_called()
+
+    async def test_nonfinite_numbers_return_field_validation_errors(self):
+        for literal in ("NaN", "Infinity", "-Infinity", "1e309"):
+            with self.subTest(literal=literal):
+                response = await self.client.post(
+                    "/v1/study-check-ins",
+                    content=f'{{"previous_exam_score": {literal}}}',
+                    headers={"Content-Type": "application/json"},
+                )
+                self.assertEqual(response.status_code, 422)
+                error = response.json()["detail"][0]
+                self.assertEqual(error["loc"], ["body", "previous_exam_score"])
+                self.assertIsInstance(error["input"], str)
         self.predictor.predict.assert_not_called()

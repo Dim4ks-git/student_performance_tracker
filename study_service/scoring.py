@@ -37,17 +37,19 @@ def estimate(answers, bundle) -> tuple[float | None, str | None]:
 
     pipeline, ordered_features, model_version = bundle
     attendance = answers.attendance_percentage
+    days = answers.exam_preparation_days
     row = {
         "previous_exam_score": answers.previous_exam_score,
         "attendance_percentage": attendance if attendance is not None else math.nan,
         "study_hours_per_day": answers.study_hours_per_day,
         "practice_tests_completed": answers.practice_tests_completed,
+        "exam_preparation_days": days if days is not None else math.nan,
+        "exam_difficulty": answers.exam_difficulty if answers.exam_difficulty_known_before_exam else None,
     }
-    frame = pd.DataFrame([row], columns=ordered_features)
-
     try:
+        frame = pd.DataFrame([row], columns=ordered_features)
         score = float(pipeline.predict(frame)[0])
-    except ValueError:
+    except (ValueError, OverflowError):
         return None, None
 
     if not math.isfinite(score):

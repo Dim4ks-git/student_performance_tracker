@@ -26,7 +26,7 @@ class QuestionValueTests(unittest.TestCase):
             {target: [80], **dict(zip(columns, [72, None, 3, 1]))}, index=[5]
         )
         estimator = Mock()
-        fit_models.return_value = {"ridge4": (columns, estimator)}
+        fit_models.return_value = {"score_model": (columns, estimator)}
         permutation_importance.return_value.importances_mean = list(expected.values())
 
         result = question_value({"train": train, "validation": validation, "schema": schema})

@@ -46,7 +46,7 @@ class FinalEvaluationTests(unittest.TestCase):
 
     def test_approved_receipt_refits_on_dev_and_reuses_holdout_predictions(self):
         models = {
-            "ridge4": (self.receipt["score_features"], sentinel.ridge),
+            "score_model": (self.receipt["score_features"], sentinel.ridge),
         }
         with (
             patch("student_model.modeling.final_eval.fit_models", return_value=models) as fit,

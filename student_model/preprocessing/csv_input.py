@@ -6,6 +6,10 @@ import pandas as pd
 from .numeric import numeric_column
 
 
+BUNDLED_DATASET_SHA256 = "aa3f57815e36a049e2545a7c4efd6c37e22e1fd71b0d6ab6164fb01d460ecc8a"
+DIFFICULTY_FLAG = "exam_difficulty_known_before_exam"
+DIFFICULTIES = ("Easy", "Medium", "Hard")
+
 HEADER = (
     "student_id",
     "age",
@@ -100,20 +104,35 @@ def read_raw(path: str | PathLike[str]) -> pd.DataFrame:
             header = next(reader, None)
             if header is None:
                 raise ValueError("CSV header is missing")
-            if tuple(header) != HEADER:
+            if tuple(header) not in (HEADER, (*HEADER, DIFFICULTY_FLAG)):
                 raise ValueError("CSV header does not match the expected column order")
 
             for row in reader:
-                if len(row) != len(HEADER):
+                if len(row) != len(header):
                     raise ValueError(
-                        f"CSV line {reader.line_num}: expected {len(HEADER)} cells, "
+                        f"CSV line {reader.line_num}: expected {len(header)} cells, "
                         f"found {len(row)}"
                     )
                 rows.append(row)
         except csv.Error as error:
             raise ValueError(f"CSV line {reader.line_num}: {error}") from error
 
-    return pd.DataFrame(rows, columns=HEADER)
+    return pd.DataFrame(rows, columns=header)
+
+
+def pre_exam_difficulty(rows: pd.DataFrame, dataset_sha256: str) -> pd.Series:
+    """Use only course ratings available at check-in, or simulated ratings in the demo."""
+    difficulty = rows["exam_difficulty"]
+    if DIFFICULTY_FLAG in rows:
+        flag = rows[DIFFICULTY_FLAG].fillna("").str.lower()
+        if not flag.isin(["true", "false", ""]).all():
+            raise ValueError(f"{DIFFICULTY_FLAG}: expected true, false, or missing")
+        difficulty = difficulty.where(flag.eq("true"))
+    elif dataset_sha256 != BUNDLED_DATASET_SHA256:
+        return pd.Series(index=rows.index, dtype=object)
+    if not difficulty.dropna().isin(DIFFICULTIES).all():
+        raise ValueError("exam_difficulty: expected Easy, Medium, Hard, or missing")
+    return difficulty
 
 
 def normalize(raw: pd.DataFrame) -> pd.DataFrame:

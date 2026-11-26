@@ -3,7 +3,7 @@ import json
 from os import PathLike
 from pathlib import Path
 
-from .csv_input import eligible, normalize, read_raw
+from .csv_input import eligible, normalize, pre_exam_difficulty, read_raw
 from .splits import split_rows
 
 
@@ -19,6 +19,7 @@ def load_input(path: str | PathLike[str]) -> dict:
     group_key = schema["group_key"]
     frame = normalize(read_raw(path))
     rows = eligible(frame, group_key, schema["target"])
+    rows = rows.assign(exam_difficulty=pre_exam_difficulty(rows, dataset_sha256))
     dev, train, validation, test = split_rows(rows, group_key)
     return {
         "schema": schema,

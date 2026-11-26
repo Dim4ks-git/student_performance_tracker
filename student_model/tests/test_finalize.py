@@ -52,14 +52,14 @@ class PublishTests(unittest.TestCase):
         metrics = json.loads(original["metrics.json"])
         self.assertEqual(metrics["validation"], self.receipt)
         self.assertIs(metrics["validation"]["approved"], True)
-        self.assertAlmostEqual(metrics["validation"]["gain_mae"], 1.5212920271, delta=1e-6)
+        self.assertAlmostEqual(metrics["validation"]["gain_mae"], 2.8989234370, delta=1e-6)
         self.assertAlmostEqual(metrics["test"]["ridge4"]["mae"], 9.4482121269, delta=1e-6)
         self.assertAlmostEqual(metrics["test"]["ridge4"]["rmse"], 11.8910655879, delta=1e-6)
         self.assertEqual(metrics["slices"]["attendance_missing"]["n"], 1979)
 
         reference = json.loads(original["reference.json"])
-        self.assertEqual(reference["input"], [73.4, None, 3.42, 10])
-        self.assertAlmostEqual(reference["expected"], 71.9617451655, delta=1e-6)
+        self.assertEqual(reference["input"], [73.4, None, 3.42, 10, 4, "Easy"])
+        self.assertAlmostEqual(reference["expected"], 75.31515166, delta=1e-6)
         self.assertTrue(hasattr(joblib.load(self.output / "score_pipeline.joblib"), "predict"))
 
     def test_last_writer_failure_removes_staging_and_leaves_output_absent(self):

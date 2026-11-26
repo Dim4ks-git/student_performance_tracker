@@ -17,4 +17,4 @@ def final_evaluation(run, receipt) -> tuple:
     target = schema["target"]
     final_metrics, predictions = compare(models, test_rows, target)
     slices = slice_errors(test_rows, target, predictions)
-    return models["ridge4"][1], final_metrics, slices
+    return models["score_model"][1], final_metrics, slices

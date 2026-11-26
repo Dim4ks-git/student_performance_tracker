@@ -12,7 +12,7 @@ def validation_report(run) -> dict:
     models = fit_models(run["train"], schema)
     metrics, _ = compare(models, run["validation"], schema["target"])
     baseline_mae = min(metrics["median"]["mae"], metrics["previous"]["mae"])
-    gain_mae = baseline_mae - metrics["ridge4"]["mae"]
+    gain_mae = baseline_mae - metrics["score_model"]["mae"]
     return {
         "dataset_sha256": run["dataset_sha256"],
         "score_features": schema["score_features"],

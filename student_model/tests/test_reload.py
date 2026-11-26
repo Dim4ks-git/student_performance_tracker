@@ -13,7 +13,7 @@ from student_model.preprocessing.experiment import load_input
 
 
 CSV_PATH = Path(__file__).resolve().parents[1] / "datasets" / "student_exam_performance_copy.csv"
-PINNED_DATASET_SHA256 = "3967020b770568f9a732387f04907807bf0c39cd1d8c96077e36646387cdf1bc"
+PINNED_DATASET_SHA256 = "aa3f57815e36a049e2545a7c4efd6c37e22e1fd71b0d6ab6164fb01d460ecc8a"
 
 
 class ReloadTests(unittest.TestCase):
@@ -25,7 +25,7 @@ class ReloadTests(unittest.TestCase):
 
     def _constant_pipeline(self):
         rows = self.run_data["dev"][self.features].head(4)
-        return make_ridge().fit(rows, [42] * len(rows))
+        return make_ridge(self.features).fit(rows, [42] * len(rows))
 
     def test_round_trip_matches_real_holdout_reference(self):
         self.assertEqual(
@@ -34,15 +34,15 @@ class ReloadTests(unittest.TestCase):
         )
         dev = self.run_data["dev"]
         target = self.schema["target"]
-        pipeline = make_ridge().fit(dev[self.features], dev[target])
+        pipeline = make_ridge(self.features).fit(dev[self.features], dev[target])
         row = self.run_data["test"].loc[[1], self.features + [target]]
-        prior, attendance, study_hours, practice_tests, observed = row.iloc[0]
+        prior, attendance, study_hours, practice_tests, days, difficulty, observed = row.iloc[0]
         self.assertTrue(math.isnan(attendance))
         self.assertEqual(observed, 86.21)
-        inputs = [prior, None, study_hours, practice_tests]
-        self.assertEqual(inputs, [73.4, None, 3.42, 10])
+        inputs = [prior, None, study_hours, practice_tests, days, difficulty]
+        self.assertEqual(inputs, [73.4, None, 3.42, 10, 4, "Easy"])
         before = float(pipeline.predict(row[self.features])[0])
-        self.assertAlmostEqual(before, 71.9617451655, delta=1e-6)
+        self.assertAlmostEqual(before, 75.31515166, delta=1e-6)
 
         with tempfile.TemporaryDirectory() as directory:
             save_model(directory, pipeline, self.schema, self.run_data["dataset_sha256"])

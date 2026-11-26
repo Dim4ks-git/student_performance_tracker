@@ -37,7 +37,7 @@ class ScoresTests(unittest.TestCase):
         models = {
             "median": (previous_columns, Mock(predict=Mock(return_value=[2, 2]))),
             "previous": (previous_columns, Mock(predict=Mock(return_value=[2, 2]))),
-            "ridge4": (ridge_columns, Mock(predict=Mock(return_value=[2, 2]))),
+            "score_model": (ridge_columns, Mock(predict=Mock(return_value=[2, 2]))),
         }
 
         metrics, predictions = compare(models, rows, "exam_score")

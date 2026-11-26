@@ -12,10 +12,15 @@ class CheckInTests(unittest.TestCase):
             "attendance_percentage",
             "study_hours_per_day",
             "practice_tests_completed",
+            "exam_preparation_days",
+            "exam_difficulty",
             "revision_frequency",
+            "study_method",
             "assignment_completion_rate",
             "goal",
+            "last_check_in",
         ))
+        unanswered["exam_difficulty_known_before_exam"] = False
         self.assertEqual(CheckIn.model_validate({}).model_dump(), unanswered)
         self.assertEqual(CheckIn.model_validate(unanswered).model_dump(), unanswered)
 
@@ -58,6 +63,11 @@ class CheckInTests(unittest.TestCase):
             ("previous_exam_score", -1),
             ("assignment_completion_rate", 101),
             ("practice_tests_completed", -1),
+            ("exam_preparation_days", -1),
+            ("exam_preparation_days", 2.5),
+            ("exam_preparation_days", True),
+            ("exam_difficulty", "Unknown"),
+            ("exam_difficulty_known_before_exam", "true"),
             ("study_hours_per_day", "3.42"),
             ("attendance_percentage", float("nan")),
             ("study_hours_per_day", float("inf")),

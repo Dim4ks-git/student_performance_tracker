@@ -1,4 +1,27 @@
-# Compiled class file
+# Python environments and bytecode
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Python test, coverage, and analysis output
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Local environment configuration
+.env
+.env.*
+!.env.example
+
+# Python packaging and Java build output
+build/
+dist/
+*.egg-info/
+target/
 *.class
 
 # Log file
@@ -27,6 +50,6 @@ replay_pid*
 .idea/
 *.iml
 
-# Repository-root Python environments
-/.venv/
-/venv/
+# OS metadata
+.DS_Store
+Thumbs.db

@@ -5,13 +5,15 @@ from study_service.schemas import CheckIn
 
 
 class NextQuestionTests(unittest.TestCase):
-    def test_asks_for_first_missing_score_input(self):
+    def test_habit_tip_can_prompt_for_missing_score_inputs(self):
         cases = (
-            (CheckIn(), "What was your last comparable exam mark out of 100?"),
-            (CheckIn(previous_exam_score=0), "How many hours per day did you study?"),
             (
-                CheckIn(previous_exam_score=73.4, study_hours_per_day=0),
-                "How many practice tests did you finish?",
+                CheckIn(revision_frequency="Rarely", practice_tests_completed=0),
+                "What was your last comparable exam mark out of 100?",
+            ),
+            (
+                CheckIn(previous_exam_score=0, revision_frequency="Rarely", practice_tests_completed=1),
+                "How many hours per day did you study?",
             ),
         )
         for answers, expected in cases:
@@ -41,11 +43,12 @@ class NextQuestionTests(unittest.TestCase):
                 )
                 self.assertIsNone(next_question(answers))
 
-    def test_selected_goal_needs_no_question_when_score_inputs_are_present(self):
+    def test_recall_goal_asks_for_method_until_known(self):
         answers = CheckIn(
             previous_exam_score=73.4,
             study_hours_per_day=3.42,
             practice_tests_completed=0,
             goal="remember_material",
         )
-        self.assertIsNone(next_question(answers))
+        self.assertEqual(next_question(answers), "How do you usually study this material?")
+        self.assertIsNone(next_question(answers.model_copy(update={"study_method": "Flashcards"})))

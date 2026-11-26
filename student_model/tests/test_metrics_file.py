@@ -26,11 +26,12 @@ class MetricsFileTests(unittest.TestCase):
             "aa3f57815e36a049e2545a7c4efd6c37e22e1fd71b0d6ab6164fb01d460ecc8a",
         )
         self.assertIs(self.receipt["approved"], True)
-        self.assertAlmostEqual(self.receipt["gain_mae"], 1.5212920271133061, places=8)
+        self.assertAlmostEqual(self.receipt["gain_mae"], 2.898923436987971, places=8)
         expected_metrics = {
             "median": (12.676953, 15.84869583845939),
             "previous": (11.003972940047582, 13.789410195881391),
             "ridge4": (9.448212126904693, 11.891065587943656),
+            "score_model": (8.120448076082395, 10.189337066460977),
         }
         self.assertEqual(self.test_metrics.keys(), expected_metrics.keys())
         for name, (mae, rmse) in expected_metrics.items():

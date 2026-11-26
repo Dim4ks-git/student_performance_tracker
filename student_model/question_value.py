@@ -6,7 +6,7 @@ from .modeling.estimators import fit_models
 def question_value(run) -> dict[str, float]:
     """Return the mean validation MAE increase in marks for each shuffled input."""
     schema = run["schema"]
-    columns, estimator = fit_models(run["train"], schema)["ridge4"]
+    columns, estimator = fit_models(run["train"], schema)["score_model"]
     validation = run["validation"]
     result = permutation_importance(
         estimator,

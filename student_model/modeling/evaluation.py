@@ -20,7 +20,7 @@ def compare(models, rows, target) -> tuple[dict[str, dict[str, float]], pd.Serie
         metrics[name] = errors(observed, predicted)
         predictions[name] = predicted
 
-    return metrics, pd.Series(predictions["ridge4"], index=rows.index)
+    return metrics, pd.Series(predictions["score_model"], index=rows.index)
 
 
 def slice_errors(rows, target, predictions) -> dict:

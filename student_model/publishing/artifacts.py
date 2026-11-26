@@ -8,17 +8,17 @@ from pathlib import Path
 import joblib
 import pandas as pd
 
+from ..preprocessing.csv_input import BUNDLED_DATASET_SHA256
 
-_PINNED_DATASET_SHA256 = "3967020b770568f9a732387f04907807bf0c39cd1d8c96077e36646387cdf1bc"
-_PINNED_PREDICTION = 71.9617451655
+_PINNED_PREDICTION = 75.31515166
 _ATOL = 1e-6
 
 
 def save_model(directory, pipeline, schema, dataset_sha256) -> None:
     """Save a fitted pipeline in a staging directory and verify its reference prediction."""
     directory = Path(directory)
-    reference_input = [73.4, None, 3.42, 10]
-    frame = pd.DataFrame([reference_input], columns=schema["score_features"], dtype=float)
+    reference_input = [73.4, None, 3.42, 10, 4, "Easy"]
+    frame = pd.DataFrame([reference_input], columns=schema["score_features"])
     expected = float(pipeline.predict(frame)[0])
     pipeline_path = directory / "score_pipeline.joblib"
     joblib.dump(pipeline, pipeline_path)
@@ -31,7 +31,7 @@ def save_model(directory, pipeline, schema, dataset_sha256) -> None:
         actual, expected, rel_tol=0, abs_tol=_ATOL
     ):
         raise ValueError("Reloaded prediction differs from the pre-save reference.")
-    if dataset_sha256 == _PINNED_DATASET_SHA256 and not math.isclose(
+    if dataset_sha256 == BUNDLED_DATASET_SHA256 and not math.isclose(
         actual, _PINNED_PREDICTION, rel_tol=0, abs_tol=_ATOL
     ):
         raise ValueError("Reloaded prediction differs from the published reference.")

@@ -43,6 +43,23 @@ class EstimateTests(unittest.TestCase):
     def test_missing_bundle_returns_no_score(self):
         self.assertEqual(estimate(self.answers, None), (None, None))
 
+    def test_only_confirmed_pre_exam_difficulty_is_passed_to_six_field_model(self):
+        bundle = (self.predictor, [*self.features, "exam_preparation_days", "exam_difficulty"], "v2")
+        for rating, known, expected in [
+            ("Easy", True, "Easy"), ("Hard", False, None), (None, True, None)
+        ]:
+            answers = self.answers.model_copy(update={
+                "exam_preparation_days": 0, "exam_difficulty": rating,
+                "exam_difficulty_known_before_exam": known,
+            })
+            self.assertEqual(estimate(answers, bundle)[1], "v2")
+            row = self.predictor.predict.call_args.args[0].iloc[0]
+            self.assertEqual(row["exam_preparation_days"], 0)
+            self.assertEqual(row["exam_difficulty"], expected)
+        estimate(self.answers, bundle)
+        row = self.predictor.predict.call_args.args[0].iloc[0]
+        self.assertTrue(math.isnan(row["exam_preparation_days"]))
+
     def test_clamps_score_to_display_bounds(self):
         for prediction, expected in ((105, 100.0), (-5, 0.0)):
             with self.subTest(prediction=prediction):
